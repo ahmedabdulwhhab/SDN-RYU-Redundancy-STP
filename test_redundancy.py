@@ -5,9 +5,9 @@ from mininet.node import RemoteController
 from mininet.term import makeTerm
 if '__main__' == __name__:
     net = Mininet(controller=RemoteController)
-    c0 = net.addController('c0', port=6633)
-    s1 = net.addSwitch('s1')
-    s2 = net.addSwitch('s2')
+    c0 = net.addController('c0',ip="192.168.1.8", port=6633)
+    s1 = self.addSwitch('s1', protocols="OpenFlow13")
+    s2 = self.addSwitch('s2', protocols="OpenFlow13")
     h1= net.addHost('h1',mac="00:00:00:00:00:01",ip="192.168.1.20/24")
     h2= net.addHost('h2',mac="00:00:00:00:00:02",ip="192.168.1.21/24")
     net.addLink(s1, h1)
