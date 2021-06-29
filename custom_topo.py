@@ -34,15 +34,16 @@ class MyTopo( Topo ):
         self.addLink( h2, s2 )
    
         """
-        h1 link set h1-eth1 down
+        write these commands inside mininet manually
+        h1 ip link set h1-eth1 down
         h1 ip link set h1-eth1 address 00:00:00:00:00:11
         h1 ip addr add 10.1.0.1/24 dev h1-eth1
-        h1 link set h1-eth1 up
+        h1 ip link set h1-eth1 up
         
-        h2 link set h2-eth1 down
+        h2 ip link set h2-eth1 down
         h2 ip link set h2-eth1 address 00:00:00:00:00:21
         h2 ip addr add 10.1.0.1/24 dev h2-eth1
-        h2 link set h2-eth1 up
+        h2 ip link set h2-eth1 up
 """
 
 topos = { 'mytopo': ( lambda: MyTopo() ) }
