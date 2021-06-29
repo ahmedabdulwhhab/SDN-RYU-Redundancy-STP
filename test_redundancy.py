@@ -6,8 +6,8 @@ from mininet.term import makeTerm
 if '__main__' == __name__:
     net = Mininet(controller=RemoteController)
     c0 = net.addController('c0',ip="192.168.1.8", port=6633)
-    s1 = self.addSwitch('s1', protocols="OpenFlow13")
-    s2 = self.addSwitch('s2', protocols="OpenFlow13")
+    s1 = net.addSwitch('s1', protocols="OpenFlow13")
+    s2 = net.addSwitch('s2', protocols="OpenFlow13")
     h1= net.addHost('h1',mac="00:00:00:00:00:01",ip="192.168.1.20/24")
     h2= net.addHost('h2',mac="00:00:00:00:00:02",ip="192.168.1.21/24")
     net.addLink(s1, h1)
@@ -30,13 +30,24 @@ if '__main__' == __name__:
     c0.start()
     s1.start([c0])
     s2.start([c0])    
-    #net.startTerms()
+    net.start()
+    h1=net.get('h1')
+    h2=net.get('h2')
+    net.startTerms()
     CLI(net)
     net.stop()    
     
     
+
+    
+    
 """
+sudo ovs-vsctl set Bridge s1 protocols=OpenFlow13 
+ sudo ovs-vsctl set Bridge s2 protocols
+ sudo ovs-ofctl -O openflow13 dump-flows s1
 ryu-manager ryu.app.simple_switch_stp_13
+ryu-manager --verbose ryu.app.example_switch_13
+tcpdump -en -i s2-eth0
 h1 ip link set h1-eth1 down 
 h1 ip link set h1-eth1 address 00:00:00:00:00:11 
 h1 ip addr add 10.1.0.1/8 dev h1-eth1 
