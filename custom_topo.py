@@ -33,7 +33,7 @@ class MyTopo( Topo ):
         self.addLink( h2, s1 )
         self.addLink( h1, s2 )
         self.addLink( h2, s2 )
-        self.addLink( s1, s2 )
+        #self.addLink( s1, s2 )
          
         """
         write these commands inside mininet manually
