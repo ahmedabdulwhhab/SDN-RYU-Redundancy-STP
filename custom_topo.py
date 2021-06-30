@@ -23,8 +23,8 @@ class MyTopo( Topo ):
         "Create custom topo."
 
         # Add hosts and switches
-        h1 = self.addHost( 'h1' )
-        h2 = self.addHost( 'h2' )
+        h1 = self.addHost( 'h1',ip='192.168.1.21/24' )
+        h2 = self.addHost( 'h2',ip='192.168.1.22/24' )
         s1 = self.addSwitch( 's1' )
         s2 = self.addSwitch( 's2' )
 
