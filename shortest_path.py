@@ -1,26 +1,4 @@
-#  This is part of our final project for the Computer Networks Graduate Course at Georgia Tech
-#    You can take the official course online too! Just google CS 6250 online at Georgia Tech.
-#
-#  Contributors:
-#   
-#    Akshar Rawal (arawal@gatech.edu)
-#    Flavio Castro (castro.flaviojr@gmail.com)
-#    Logan Blyth (lblyth3@gatech.edu)
-#    Matthew Hicks (mhicks34@gatech.edu)
-#    Uy Nguyen (unguyen3@gatech.edu)
-#
-#  To run:
-#   sudo mn --controller=remote,ip=127.0.0.1 --switch=ovsk --topo=linear,3,2 --mac
-#   sudo ovs-vsctl set Bridge s1 protocols=OpenFlow10
-#   sudo ovs-vsctl set Bridge s2 protocols=OpenFlow10
-#   sudo ovs-vsctl set Bridge s3 protocols=OpenFlow10  
-#   
-#
-#    ryu--manager --observe-links shortestpath.py ryu.app.simple_switch
-
-
-#
-#Copyright (C) 2014, Georgia Institute of Technology.
+# Copyright (C) 2011 Nippon Telegraph and Telephone Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -35,145 +13,209 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-An OpenFlow 1.0 shortest path forwarding implementation.
-"""
 
-import logging
-import struct
+
+
+#   ryu-manager --verbose --observe-links shortest_path.py
+#   sudo mn --controller=remote,ip=192.168.0.100 --switch=ovsk,protocols=OpenFlow13 --topo=linear,3,2 --mac
+#   sudo ovs-vsctl set Bridge s1 protocols=OpenFlow13
+#   sudo ovs-vsctl set Bridge s2 protocols=OpenFlow13
+#   sudo ovs-vsctl set Bridge s3 protocols=OpenFlow13  
+
 
 from ryu.base import app_manager
-from ryu.controller import mac_to_port
 from ryu.controller import ofp_event
-from ryu.controller.handler import MAIN_DISPATCHER, CONFIG_DISPATCHER
+from ryu.controller.handler import CONFIG_DISPATCHER, MAIN_DISPATCHER
 from ryu.controller.handler import set_ev_cls
-from ryu.ofproto import ofproto_v1_0
-from ryu.lib.mac import haddr_to_bin
+from ryu.ofproto import ofproto_v1_3
 from ryu.lib.packet import packet
 from ryu.lib.packet import ethernet
+from ryu.lib.packet import ether_types
+from ryu.lib import mac
+from ryu.lib.mac import haddr_to_bin
+from ryu.controller import mac_to_port
 
-from ryu.topology.api import get_switch, get_link
-from ryu.app.wsgi import ControllerBase
-from ryu.topology import event, switches 
 import networkx as nx
 
-class ProjectController(app_manager.RyuApp):
-	
-    OFP_VERSIONS = [ofproto_v1_0.OFP_VERSION]
+from ryu.topology import event, switches
+from ryu.topology.api import get_switch, get_link
+from ryu.app.wsgi import ControllerBase
+
+#import matplotlib.pyplot as plt
+
+class SimpleSwitch13(app_manager.RyuApp):
+    OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
 
     def __init__(self, *args, **kwargs):
-        super(ProjectController, self).__init__(*args, **kwargs)
+        super(SimpleSwitch13, self).__init__(*args, **kwargs)
         self.mac_to_port = {}
-        self.topology_api_app = self
-        self.net=nx.DiGraph()
-        self.nodes = {}
-        self.links = {}
-        self.no_of_nodes = 0
-        self.no_of_links = 0
-        self.i=0
+        self.net = nx.DiGraph()
+        self.count = 0
 
-
-    # Handy function that lists all attributes in the given object
-    def ls(self,obj):
-        print("\n".join([x for x in dir(obj) if x[0] != "_"]))
-	
-    def add_flow(self, datapath, in_port, dst, actions):
+    @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
+    def switch_features_handler(self, ev):
+        datapath = ev.msg.datapath
         ofproto = datapath.ofproto
+        parser = datapath.ofproto_parser
 
-        match = datapath.ofproto_parser.OFPMatch(
-            in_port=in_port, dl_dst=haddr_to_bin(dst))
+        # install table-miss flow entry
+        #
+        # We specify NO BUFFER to max_len of the output action due to
+        # OVS bug. At this moment, if we specify a lesser number, e.g.,
+        # 128, OVS will send Packet-In with invalid buffer_id and
+        # truncated packet data. In that case, we cannot output packets
+        # correctly.  The bug has been fixed in OVS v2.1.0.
+        match = parser.OFPMatch()
+        actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER,
+                                          ofproto.OFPCML_NO_BUFFER)]
+        self.add_flow(datapath, 0, match, actions)
 
-        mod = datapath.ofproto_parser.OFPFlowMod(
-            datapath=datapath, match=match, cookie=0,
-            command=ofproto.OFPFC_ADD, idle_timeout=0, hard_timeout=0,
-            priority=ofproto.OFP_DEFAULT_PRIORITY,
-            flags=ofproto.OFPFF_SEND_FLOW_REM, actions=actions)
+    def add_flow(self, datapath, priority, match, actions, buffer_id=None):
+        ofproto = datapath.ofproto
+        parser = datapath.ofproto_parser
+
+        inst = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS,
+                                             actions)]
+        if buffer_id:
+            mod = parser.OFPFlowMod(datapath=datapath, buffer_id=buffer_id,
+                                    priority=priority, match=match,
+                                    instructions=inst)
+        else:
+            mod = parser.OFPFlowMod(datapath=datapath, priority=priority,
+                                    match=match, instructions=inst)
         datapath.send_msg(mod)
+
+    def is_broadcast_mac(mac):
+        if mac == "ff:ff:ff:ff:ff:ff":
+            return True 
+        else:
+            return False
 
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
     def _packet_in_handler(self, ev):
+        # If you hit this you might want to increase
+        # the "miss_send_length" of your switch
+        if ev.msg.msg_len < ev.msg.total_len:
+            self.logger.debug("packet truncated: only %s of %s bytes",
+                              ev.msg.msg_len, ev.msg.total_len)
         msg = ev.msg
         datapath = msg.datapath
         ofproto = datapath.ofproto
+        parser = datapath.ofproto_parser
+        in_port = msg.match['in_port']
 
         pkt = packet.Packet(msg.data)
-        eth = pkt.get_protocol(ethernet.ethernet)
+        eth = pkt.get_protocols(ethernet.ethernet)[0]
 
+        if eth.ethertype == ether_types.ETH_TYPE_LLDP or eth.ethertype == ether_types.ETH_TYPE_IPV6:
+            # ignore lldp packet
+            return
         dst = eth.dst
         src = eth.src
+
         dpid = datapath.id
         self.mac_to_port.setdefault(dpid, {})
-        #print "nodes"
-        #print self.net.nodes()
-        #print "edges"
-        #print self.net.edges()
-        self.logger.info("packet in %s %s %s %s", dpid, src, dst, msg.in_port)
+
+        self.logger.info(">>>>>>> packet in %s %s %s %s", dpid, src, dst, in_port)
+
+
+        # # learn a mac address to avoid FLOOD next time.
+        # self.mac_to_port[dpid][src] = in_port
+
+        # Check to see if src is already in mac_to_port
+        # If not, add src to mac_to_port
+        if src not in self.mac_to_port[dpid]:
+            self.mac_to_port[dpid][src] = in_port
+
+            self.logger.info("src NOT-in mac to port====================================")
+            self.logger.info(self.mac_to_port)
+        else:
+            # This means that there is already a src entry in mac_to_port
+            # If in_port of packet is something different from the first (original)
+            # in_port, we can conclude that this packet was flooded, and can be dropped
+
+            self.logger.info("src IN mac to port========================================")
+            self.logger.info(self.mac_to_port)
+            if self.mac_to_port[dpid][src] != in_port and str(dst) == "ff:ff:ff:ff:ff:ff":
+                # add flow to drop packet on this in_port
+                prio = 2
+                actions = []
+                match = parser.OFPMatch(eth_src=src,in_port = in_port)
+                inst = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS,actions)]
+                if msg.buffer_id != ofproto.OFP_NO_BUFFER:
+                    mod = parser.OFPFlowMod(datapath=datapath, buffer_id=msg.buffer_id,
+                                            priority=prio, match=match,
+                                            instructions=inst)
+
+                else:
+                    mod = parser.OFPFlowMod(datapath=datapath, priority=prio,
+                                            match=match, instructions=inst)
+
+                datapath.send_msg(mod)
+                self.logger.info("IN PORT WRONG: %s, DROPPING PKT", in_port)
+                return
+
+
         if src not in self.net:
             self.net.add_node(src)
-            self.net.add_edge(dpid,src,{'port':msg.in_port})
-            self.net.add_edge(src,dpid)
-        if dst in self.net:
-            #print (src in self.net)
-            #print nx.shortest_path(self.net,1,4)
-            #print nx.shortest_path(self.net,4,1)
-            #print nx.shortest_path(self.net,src,4)
+            self.net.add_edge(dpid, src, {'port':in_port})
+            self.net.add_edge(src, dpid)
 
-            path=nx.shortest_path(self.net,src,dst)   
-            next=path[path.index(dpid)+1]
-            out_port=self.net[dpid][next]['port']
+
+        if dst in self.net:
+            path = nx.shortest_path(self.net, src, dst)
+            next = path[path.index(dpid)+1]
+            out_port = self.net[dpid][next]['port']
+            self.logger.info("dst found, outputing pkt to port %s", out_port)
+            self.logger.info("path is : %s", str(path))
         else:
             out_port = ofproto.OFPP_FLOOD
 
-        actions = [datapath.ofproto_parser.OFPActionOutput(out_port)]
+        # if dst in self.mac_to_port[dpid]:
+        #     out_port = self.mac_to_rt[dpopid][dst]
+        #     self.logger.info("dst found, outputing pkt to port %s", out_port)
+        # else:
+        #     out_port = ofproto.OFPP_FLOOD
+        #     self.logger.info("dst NOT found, flooding...")
+
+        actions = [parser.OFPActionOutput(out_port)]
 
         # install a flow to avoid packet_in next time
         if out_port != ofproto.OFPP_FLOOD:
-            self.add_flow(datapath, msg.in_port, dst, actions)
+            match = parser.OFPMatch(in_port=in_port, eth_dst=dst, eth_src=src)
+            # verify if we have a valid buffer_id, if yes avoid to send both
+            # flow_mod & packet_out
+            if msg.buffer_id != ofproto.OFP_NO_BUFFER:
+                self.add_flow(datapath, 1, match, actions, msg.buffer_id)
+                #return
+            else:
+                self.add_flow(datapath, 1, match, actions)
+        data = None
+        if msg.buffer_id == ofproto.OFP_NO_BUFFER:
+            data = msg.data
 
-        out = datapath.ofproto_parser.OFPPacketOut(
-            datapath=datapath, buffer_id=msg.buffer_id, in_port=msg.in_port,
-            actions=actions)
+        out = parser.OFPPacketOut(datapath=datapath, buffer_id=msg.buffer_id,
+                                  in_port=in_port, actions=actions, data=data)
         datapath.send_msg(out)
-    
+
+
     @set_ev_cls(event.EventSwitchEnter)
     def get_topology_data(self, ev):
-        switch_list = get_switch(self.topology_api_app, None)   
-        switches=[switch.dp.id for switch in switch_list]
+        switch_list = get_switch(self, None)
+        switches = [i.dp.id for i in switch_list]
+        # print ("Switches:---------------------")
+        # print (switches)
+        # print ("------------------------------")        
+        link_list = get_link(self, None)
+        links = [(link.src.dpid, link.dst.dpid, {'port':link.src.port_no}) for link in link_list]
+        print ("Links:--------------------------------------------------------")
+        print (links)
+        print ("size: ", str(len(links)))
+        print ("-----------------------------------------------------------------")
         self.net.add_nodes_from(switches)
-         
-        #print "**********List of switches"
-        #for switch in switch_list:
-        #self.ls(switch)
-        #print switch
-        #self.nodes[self.no_of_nodes] = switch
-        #self.no_of_nodes += 1
-	
-        links_list = get_link(self.topology_api_app, None)
-        #print links_list
-        links=[(link.src.dpid,link.dst.dpid,{'port':link.src.port_no}) for link in links_list]
-        #print links
         self.net.add_edges_from(links)
-        links=[(link.dst.dpid,link.src.dpid,{'port':link.dst.port_no}) for link in links_list]
-        #print links
-        self.net.add_edges_from(links)
-        print ("**********List of links")
-        print (self.net.edges())
-        #for link in links_list:
-	    #print link.dst
-            #print link.src
-            #print "Novo link"
-	    #self.no_of_links += 1
-      
-        
-	#print "@@@@@@@@@@@@@@@@@Printing both arrays@@@@@@@@@@@@@@@"
-    #for node in self.nodes:	
-	#    print self.nodes[node]
-	#for link in self.links:
-	#    print self.links[link]
-	#print self.no_of_nodes
-	#print self.no_of_links
-
-    #@set_ev_cls(event.EventLinkAdd)
-    #def get_links(self, ev):
-	#print "################Something##############"
-	#print ev.link.src, ev.link.dst
+        if len(switches) >= 20:
+            #nx.draw(self.net)
+            #plt.savefig("path.png")
+            print ("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+            return
