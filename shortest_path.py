@@ -1,3 +1,12 @@
+#   ryu-manager --verbose --observe-links shortest_path.py
+#   sudo mn --controller=remote,ip=192.168.0.100 --switch=ovsk,protocols=OpenFlow13 --topo=linear,3,2 --mac
+#   sudo ovs-vsctl set Bridge s1 protocols=OpenFlow13
+#   sudo ovs-vsctl set Bridge s2 protocols=OpenFlow13
+#   sudo ovs-vsctl set Bridge s3 protocols=OpenFlow13  
+
+
+
+
 from ryu.base import app_manager
 from ryu.ofproto import ofproto_v1_3, ofproto_v1_3_parser
 from ryu.controller.handler import set_ev_cls
