@@ -8,7 +8,7 @@ Adding the 'topos' dict with a key/value pair to generate our newly defined
 topology enables one to pass in '--topo=mytopo' from the command line.
 
 
- sudo mn --custom ring_topo.py --topo mytopo  --controller remote,ip=192.168.0.100 --switch ovsk,protocols=OpenFlow10 --mac --ipbase=10.1.1.0/24
+ sudo mn --custom ring_topo.py --topo mytopo  --controller remote,ip=192.168.0.100 --switch ovsk,protocols=OpenFlow13 --mac --ipbase=10.1.1.0/24
 
 
 
