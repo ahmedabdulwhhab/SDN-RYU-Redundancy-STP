@@ -1,0 +1,238 @@
+loading app pranav93y.py
+Generating grammar tables from /usr/lib/python3.8/lib2to3/Grammar.txt
+Generating grammar tables from /usr/lib/python3.8/lib2to3/PatternGrammar.txt
+loading app ryu.topology.switches
+loading app ryu.controller.ofp_handler
+instantiating app pranav93y.py of SimpleSwitch13
+instantiating app ryu.topology.switches of Switches
+instantiating app ryu.controller.ofp_handler of OFPHandler
+Links:--------------------------------------------------------
+[]
+size:  0
+-----------------------------------------------------------------
+Links:--------------------------------------------------------
+[]
+size:  0
+-----------------------------------------------------------------
+Links:--------------------------------------------------------
+[]
+size:  0
+-----------------------------------------------------------------
+Links:--------------------------------------------------------
+[]
+size:  0
+-----------------------------------------------------------------
+Links:--------------------------------------------------------
+[]
+size:  0
+-----------------------------------------------------------------
+>>>>>>> packet in 1 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 1
+src NOT-in mac to port====================================
+{1: {'00:00:00:00:00:01': 1}}
+>>>>>>> packet in 2 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 2
+src NOT-in mac to port====================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}}
+>>>>>>> packet in 3 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 1
+src NOT-in mac to port====================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}}
+>>>>>>> packet in 3 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 2
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}}
+IN PORT WRONG:  2  DROPPING PKT
+self.mac_to_port[dpid][src]=1 , in_port =2, str(dst)=ff:ff:ff:ff:ff:ff
+IN PORT WRONG: 2, DROPPING PKT
+>>>>>>> packet in 5 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 2
+src NOT-in mac to port====================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}}
+>>>>>>> packet in 4 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 2
+src NOT-in mac to port====================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2}}
+>>>>>>> packet in 1 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 3
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2}}
+IN PORT WRONG:  3  DROPPING PKT
+self.mac_to_port[dpid][src]=1 , in_port =3, str(dst)=ff:ff:ff:ff:ff:ff
+IN PORT WRONG: 3, DROPPING PKT
+>>>>>>> packet in 4 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 3
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2}}
+IN PORT WRONG:  3  DROPPING PKT
+self.mac_to_port[dpid][src]=2 , in_port =3, str(dst)=ff:ff:ff:ff:ff:ff
+IN PORT WRONG: 3, DROPPING PKT
+>>>>>>> packet in 4 00:00:00:00:00:02 00:00:00:00:00:01 1
+src NOT-in mac to port====================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+SimpleSwitch13: Exception occurred during handler processing. Backtrace from offending handler [_packet_in_handler] servicing event [EventOFPPacketIn] follows.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.8/site-packages/ryu/base/app_manager.py", line 290, in _event_loop
+    handler(ev)
+  File "/home/ubuntu/sdn/ryu-controller/fast_test/pranav93y.py", line 168, in _packet_in_handler
+    path = nx.shortest_path(self.net, src, dst)
+  File "/usr/local/lib/python3.8/dist-packages/networkx/algorithms/shortest_paths/generic.py", line 136, in shortest_path
+    paths=nx.bidirectional_shortest_path(G,source,target)
+  File "/usr/local/lib/python3.8/dist-packages/networkx/algorithms/shortest_paths/unweighted.py", line 136, in bidirectional_shortest_path
+    results=_bidirectional_pred_succ(G,source,target)
+  File "/usr/local/lib/python3.8/dist-packages/networkx/algorithms/shortest_paths/unweighted.py", line 201, in _bidirectional_pred_succ
+    raise nx.NetworkXNoPath("No path between %s and %s." % (source, target))
+networkx.exception.NetworkXNoPath: No path between 00:00:00:00:00:02 and 00:00:00:00:00:01.
+>>>>>>> packet in 5 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 1
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+IN PORT WRONG:  1  DROPPING PKT
+self.mac_to_port[dpid][src]=2 , in_port =1, str(dst)=ff:ff:ff:ff:ff:ff
+IN PORT WRONG: 1, DROPPING PKT
+>>>>>>> packet in 1 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 1
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+>>>>>>> packet in 3 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 1
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+>>>>>>> packet in 2 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 2
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+>>>>>>> packet in 4 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 2
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+>>>>>>> packet in 5 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 2
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+>>>>>>> packet in 4 00:00:00:00:00:02 00:00:00:00:00:01 1
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+SimpleSwitch13: Exception occurred during handler processing. Backtrace from offending handler [_packet_in_handler] servicing event [EventOFPPacketIn] follows.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.8/site-packages/ryu/base/app_manager.py", line 290, in _event_loop
+    handler(ev)
+  File "/home/ubuntu/sdn/ryu-controller/fast_test/pranav93y.py", line 168, in _packet_in_handler
+    path = nx.shortest_path(self.net, src, dst)
+  File "/usr/local/lib/python3.8/dist-packages/networkx/algorithms/shortest_paths/generic.py", line 136, in shortest_path
+    paths=nx.bidirectional_shortest_path(G,source,target)
+  File "/usr/local/lib/python3.8/dist-packages/networkx/algorithms/shortest_paths/unweighted.py", line 136, in bidirectional_shortest_path
+    results=_bidirectional_pred_succ(G,source,target)
+  File "/usr/local/lib/python3.8/dist-packages/networkx/algorithms/shortest_paths/unweighted.py", line 201, in _bidirectional_pred_succ
+    raise nx.NetworkXNoPath("No path between %s and %s." % (source, target))
+networkx.exception.NetworkXNoPath: No path between 00:00:00:00:00:02 and 00:00:00:00:00:01.
+>>>>>>> packet in 1 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 1
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+>>>>>>> packet in 3 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 1
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+>>>>>>> packet in 2 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 2
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+>>>>>>> packet in 4 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 2
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+>>>>>>> packet in 5 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 2
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+>>>>>>> packet in 4 00:00:00:00:00:02 00:00:00:00:00:01 1
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+SimpleSwitch13: Exception occurred during handler processing. Backtrace from offending handler [_packet_in_handler] servicing event [EventOFPPacketIn] follows.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.8/site-packages/ryu/base/app_manager.py", line 290, in _event_loop
+    handler(ev)
+  File "/home/ubuntu/sdn/ryu-controller/fast_test/pranav93y.py", line 168, in _packet_in_handler
+    path = nx.shortest_path(self.net, src, dst)
+  File "/usr/local/lib/python3.8/dist-packages/networkx/algorithms/shortest_paths/generic.py", line 136, in shortest_path
+    paths=nx.bidirectional_shortest_path(G,source,target)
+  File "/usr/local/lib/python3.8/dist-packages/networkx/algorithms/shortest_paths/unweighted.py", line 136, in bidirectional_shortest_path
+    results=_bidirectional_pred_succ(G,source,target)
+  File "/usr/local/lib/python3.8/dist-packages/networkx/algorithms/shortest_paths/unweighted.py", line 201, in _bidirectional_pred_succ
+    raise nx.NetworkXNoPath("No path between %s and %s." % (source, target))
+networkx.exception.NetworkXNoPath: No path between 00:00:00:00:00:02 and 00:00:00:00:00:01.
+>>>>>>> packet in 1 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 1
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+>>>>>>> packet in 2 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 2
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+>>>>>>> packet in 3 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 1
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+>>>>>>> packet in 4 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 2
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+>>>>>>> packet in 5 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 2
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+>>>>>>> packet in 4 00:00:00:00:00:02 00:00:00:00:00:01 1
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+SimpleSwitch13: Exception occurred during handler processing. Backtrace from offending handler [_packet_in_handler] servicing event [EventOFPPacketIn] follows.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.8/site-packages/ryu/base/app_manager.py", line 290, in _event_loop
+    handler(ev)
+  File "/home/ubuntu/sdn/ryu-controller/fast_test/pranav93y.py", line 168, in _packet_in_handler
+    path = nx.shortest_path(self.net, src, dst)
+  File "/usr/local/lib/python3.8/dist-packages/networkx/algorithms/shortest_paths/generic.py", line 136, in shortest_path
+    paths=nx.bidirectional_shortest_path(G,source,target)
+  File "/usr/local/lib/python3.8/dist-packages/networkx/algorithms/shortest_paths/unweighted.py", line 136, in bidirectional_shortest_path
+    results=_bidirectional_pred_succ(G,source,target)
+  File "/usr/local/lib/python3.8/dist-packages/networkx/algorithms/shortest_paths/unweighted.py", line 201, in _bidirectional_pred_succ
+    raise nx.NetworkXNoPath("No path between %s and %s." % (source, target))
+networkx.exception.NetworkXNoPath: No path between 00:00:00:00:00:02 and 00:00:00:00:00:01.
+>>>>>>> packet in 1 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 1
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+>>>>>>> packet in 3 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 1
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+>>>>>>> packet in 2 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 2
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+>>>>>>> packet in 4 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 2
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+>>>>>>> packet in 5 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 2
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+>>>>>>> packet in 4 00:00:00:00:00:02 00:00:00:00:00:01 1
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+SimpleSwitch13: Exception occurred during handler processing. Backtrace from offending handler [_packet_in_handler] servicing event [EventOFPPacketIn] follows.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.8/site-packages/ryu/base/app_manager.py", line 290, in _event_loop
+    handler(ev)
+  File "/home/ubuntu/sdn/ryu-controller/fast_test/pranav93y.py", line 168, in _packet_in_handler
+    path = nx.shortest_path(self.net, src, dst)
+  File "/usr/local/lib/python3.8/dist-packages/networkx/algorithms/shortest_paths/generic.py", line 136, in shortest_path
+    paths=nx.bidirectional_shortest_path(G,source,target)
+  File "/usr/local/lib/python3.8/dist-packages/networkx/algorithms/shortest_paths/unweighted.py", line 136, in bidirectional_shortest_path
+    results=_bidirectional_pred_succ(G,source,target)
+  File "/usr/local/lib/python3.8/dist-packages/networkx/algorithms/shortest_paths/unweighted.py", line 201, in _bidirectional_pred_succ
+    raise nx.NetworkXNoPath("No path between %s and %s." % (source, target))
+networkx.exception.NetworkXNoPath: No path between 00:00:00:00:00:02 and 00:00:00:00:00:01.
+>>>>>>> packet in 1 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 1
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+>>>>>>> packet in 2 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 2
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+>>>>>>> packet in 3 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 1
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+>>>>>>> packet in 5 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 2
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+>>>>>>> packet in 4 00:00:00:00:00:01 ff:ff:ff:ff:ff:ff 2
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+>>>>>>> packet in 4 00:00:00:00:00:02 00:00:00:00:00:01 1
+src IN mac to port========================================
+{1: {'00:00:00:00:00:01': 1}, 2: {'00:00:00:00:00:01': 2}, 3: {'00:00:00:00:00:01': 1}, 5: {'00:00:00:00:00:01': 2}, 4: {'00:00:00:00:00:01': 2, '00:00:00:00:00:02': 1}}
+SimpleSwitch13: Exception occurred during handler processing. Backtrace from offending handler [_packet_in_handler] servicing event [EventOFPPacketIn] follows.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.8/site-packages/ryu/base/app_manager.py", line 290, in _event_loop
+    handler(ev)
+  File "/home/ubuntu/sdn/ryu-controller/fast_test/pranav93y.py", line 168, in _packet_in_handler
+    path = nx.shortest_path(self.net, src, dst)
+  File "/usr/local/lib/python3.8/dist-packages/networkx/algorithms/shortest_paths/generic.py", line 136, in shortest_path
+    paths=nx.bidirectional_shortest_path(G,source,target)
+  File "/usr/local/lib/python3.8/dist-packages/networkx/algorithms/shortest_paths/unweighted.py", line 136, in bidirectional_shortest_path
+    results=_bidirectional_pred_succ(G,source,target)
+  File "/usr/local/lib/python3.8/dist-packages/networkx/algorithms/shortest_paths/unweighted.py", line 201, in _bidirectional_pred_succ
+    raise nx.NetworkXNoPath("No path between %s and %s." % (source, target))
+networkx.exception.NetworkXNoPath: No path between 00:00:00:00:00:02 and 00:00:00:00:00:01.
